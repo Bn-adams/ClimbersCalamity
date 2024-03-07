@@ -7,10 +7,13 @@ public class P1Mov : MonoBehaviour
 {
     [SerializeField]
     GameObject WorldStats;
+    public RopeScript ropeScript;
 
     public P1Stats p1stats;
     public P2Stats p2stats;
     private Rigidbody2D rb;
+
+    private Vector2 swingingVelocity;
 
     int p1score = 0;
     private void OnEnable()
@@ -54,12 +57,22 @@ public class P1Mov : MonoBehaviour
 
     void FixedUpdate()
     {
-        Movement();
+        
     }
     // Update is called once per frame
     void Update()
     {
+        if (!ropeScript.isSwinging) { 
 
+            Movement();
+            //Debug.Log("Moving");
+        }
+        else
+        {
+            swingingVelocity = rb.velocity;
+            //Debug.Log(swingingVelocity);
+        }
+        
         //Debug.Log(p1stats.p1MovSpeed);
         if (Input.GetKey(KeyCode.V))
         {
@@ -72,12 +85,21 @@ public class P1Mov : MonoBehaviour
             SceneManager.LoadScene("SampleScene");
         }
     }
+    public void StrightAfterSwing()
+    {
+        rb.velocity = swingingVelocity;
+        Debug.Log(swingingVelocity);
+    }
     void Movement()
     {
         float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-
-        rb.velocity = new Vector2 (moveHorizontal*p1stats.p1MovSpeed, moveVertical* p1stats.p1MovSpeed);
+        //float moveVertical = 0;
+        //Input.GetAxis("Vertical");
+        //Vector2 v2v = rb.velocity;
+        //Debug.Log(p1stats.p1MovSpeed);
+        //Vector2 Mov = new Vector2(moveHorizontal * p1stats.p1MovSpeed, 0);
+        //Debug.Log(rb.velocity);
+        //rb.velocity += Mov;
         
     }
 }

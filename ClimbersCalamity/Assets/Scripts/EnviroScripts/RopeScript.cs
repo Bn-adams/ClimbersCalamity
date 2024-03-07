@@ -6,12 +6,16 @@ using UnityEngine;
 public class RopeScript : MonoBehaviour
 {
     public GameObject ropeShooter;
+    public P1Mov p1Mov;
 
     private SpringJoint2D rope;
     public int maxRopeFrameCount;
     private int ropeFrameCount;
     private int ropeMinLength = 1;
     private float lerpTime = 0.0001f;
+
+    public bool isSwinging = false;
+
     float t;
 
     public LineRenderer lineRenderer;
@@ -19,7 +23,6 @@ public class RopeScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetMouseButtonDown(0))
         {
             Fire();
@@ -27,7 +30,7 @@ public class RopeScript : MonoBehaviour
 
         if(Input.GetMouseButtonDown(1))
         {
-            GameObject.DestroyImmediate(rope);
+            DestroyRope();
         }
 
         
@@ -35,7 +38,7 @@ public class RopeScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
-
+        //slowly lerps the player to the current anchor point which the current rope is connected to
         if (rope != null)
         {
             ropeShooter.transform.position = Vector3.Lerp(ropeShooter.transform.position, rope.connectedAnchor, t);
@@ -45,24 +48,27 @@ public class RopeScript : MonoBehaviour
             float length = vectorDistance.magnitude;
             if (length < ropeMinLength)
             {
-                GameObject.DestroyImmediate(rope);
+                DestroyRope();
             }
         }
 
 
         /*
+        //makes the spawned rope have a timer where after the elapsed time the current rope will despawn
         if (rope != null)
         {
             ropeFrameCount++;
             if (ropeFrameCount > maxRopeFrameCount)
             {
-                GameObject.Destroy(rope);
+                DestroyRope();
                 ropeFrameCount = 0;
             }
         }
         */
     }
 
+
+    //handes the render of the line trace so you can see it
     void LateUpdate()
     {
         if (rope != null)
@@ -76,36 +82,58 @@ public class RopeScript : MonoBehaviour
         {
             lineRenderer.enabled = false;
         }
-
-
-
     }
     
     
     
-
+    //Function is called everytime a new roap is trying to be spawned
     void Fire()
     {
+        //calculates the position of where you want to swing too, casts a raytrace line and finds the
+        //direction of the soon to be spawned rope
+
+        
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3 position = ropeShooter.transform.position;
         Vector3 direction = mousePosition - position;
 
-        RaycastHit2D hit = Physics2D.Raycast(position, direction, Mathf.Infinity);
+        RaycastHit2D[] hits;
+        hits = Physics2D.RaycastAll(position, direction, Mathf.Infinity);
         t = 0;
 
-        if (hit.collider != null)
+        //ray trace cast is fired and all collision boxes it hits is stored in "hits" the for loop below 
+        //compares each hit and finds if it has the tag "Swing" if it does that spawn the rope
+        for (int i = 0; i < hits.Length; i++)
         {
-            SpringJoint2D newRope = ropeShooter.AddComponent<SpringJoint2D>();
-            newRope.enableCollision = false;
-            newRope.frequency = 0.0f;
-            newRope.connectedAnchor = hit.point;
-            newRope.enabled = true;
+            //Debug.Log(hits[i]);
 
-            GameObject.DestroyImmediate(rope);
-            rope = newRope;
-            ropeFrameCount = 0;
+            RaycastHit2D hit = hits[i];
+            if (hit.transform.CompareTag("Swing"))
+            {
+
+                SpringJoint2D newRope = ropeShooter.AddComponent<SpringJoint2D>();
+                newRope.enableCollision = false;
+                newRope.frequency = 0.0f;
+                newRope.connectedAnchor = hit.point;
+                newRope.enabled = true;
+                
+                
+                DestroyRope();
+                rope = newRope;
+                isSwinging = true;
+                ropeFrameCount = 0;
+            }
         }
+    }
+    //destroys the game object rope and also turns of the bool that is used in the player mov script
+    void DestroyRope()
+    {
+        p1Mov = ropeShooter.GetComponent<P1Mov>();
 
+        //p1Mov.StrightAfterSwing();
 
+        
+        isSwinging = false;
+        GameObject.DestroyImmediate(rope);
     }
 }
