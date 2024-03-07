@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        p1Mov = player.GetComponent<P1Mov>();
+        //p1Mov = player.GetComponent<P1Mov>();
     }
 
     // Update is called once per frame
