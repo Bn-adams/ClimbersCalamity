@@ -656,7 +656,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!61 &1737110134
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -837,6 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ropeShooter: {fileID: 1737110127}
+  p1Mov: {fileID: 0}
   maxRopeFrameCount: 0
   isSwinging: 0
   lineRenderer: {fileID: 1932900579}
