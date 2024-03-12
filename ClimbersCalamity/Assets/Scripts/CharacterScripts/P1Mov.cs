@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,9 +14,12 @@ public class P1Mov : MonoBehaviour
     public P2Stats p2stats;
     private Rigidbody2D rb;
 
-    private Vector2 swingingVelocity;
+    
 
     int p1score = 0;
+
+   
+
     private void OnEnable()
     {
         p1score = PlayerPrefs.GetInt("score");
@@ -30,6 +34,7 @@ public class P1Mov : MonoBehaviour
 
     void Start()
     {
+
         p1stats = WorldStats.GetComponent<P1Stats>();
         //p2stats = WorldStats.GetComponent<P2Stats>();
         rb = GetComponent<Rigidbody2D>();
@@ -52,7 +57,7 @@ public class P1Mov : MonoBehaviour
 
         Debug.Log("Start!!!" + p1score);
 
-        
+        //lastPlayerPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -62,15 +67,25 @@ public class P1Mov : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var vel = rb.velocity;
+        //Debug.Log(vel.magnitude);
+
+        //PlayerDelta = transform.position - lastPlayerPosition;
+        //lastPlayerPosition = transform.position;
+
+        //Debug.Log(PlayerDelta);
         if (!ropeScript.isSwinging) { 
 
             Movement();
             //Debug.Log("Moving");
         }
+        //called if you are swining
         else
         {
-            swingingVelocity = rb.velocity;
-            //Debug.Log(swingingVelocity);
+            //swingingVelocity = rb.velocity;
+            Debug.Log("you swing boi");
+
+            
         }
         
         //Debug.Log(p1stats.p1MovSpeed);
@@ -87,8 +102,9 @@ public class P1Mov : MonoBehaviour
     }
     public void StrightAfterSwing()
     {
-        rb.velocity = swingingVelocity;
-        Debug.Log(swingingVelocity);
+        rb.AddForce(transform.up * 200f);
+        //rb.velocity = swingingVelocity;
+        //Debug.Log(swingingVelocity);
     }
     void Movement()
     {
@@ -97,7 +113,7 @@ public class P1Mov : MonoBehaviour
         //Input.GetAxis("Vertical");
         //Vector2 v2v = rb.velocity;
         //Debug.Log(p1stats.p1MovSpeed);
-        //Vector2 Mov = new Vector2(moveHorizontal * p1stats.p1MovSpeed, 0);
+        Vector2 Mov = new Vector2(moveHorizontal * 1, 0);
         //Debug.Log(rb.velocity);
         //rb.velocity += Mov;
         
