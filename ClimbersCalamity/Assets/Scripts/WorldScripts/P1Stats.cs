@@ -24,13 +24,6 @@ public class P1Stats : MonoBehaviour
     public int p1CalamityScore;
     public int p1Multiplier;
 
-
-    public void P1CalamityScore(int calamityScore)
-    {
-        p1CalamityScore = calamityScore;
-    }
-    
-
     private void Start()
     {
         

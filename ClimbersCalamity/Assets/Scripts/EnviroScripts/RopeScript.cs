@@ -47,7 +47,7 @@ public class RopeScript : MonoBehaviour
         {
             ropedistance = rope.distance;
 
-            Debug.Log(ropedistance);
+            //Debug.Log(ropedistance);
             //ropeShooter.transform.position = Vector3.Lerp(ropeShooter.transform.position, rope.connectedAnchor, t);
             
 
