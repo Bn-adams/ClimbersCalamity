@@ -16,7 +16,11 @@ public class P1Mov : MonoBehaviour
     public P2Stats p2stats;
     private Rigidbody2D rb;
     private bool isGrounded;
-    
+    private float movement;
+    float moveHorizontal;
+    private Vector3 jumpVelocity = Vector3.zero;
+
+
 
     int p1score = 0;
 
@@ -38,8 +42,12 @@ public class P1Mov : MonoBehaviour
         //p2stats = WorldStats.GetComponent<P2Stats>();
         rb = GetComponent<Rigidbody2D>();
 
-        p1stats.p1MovSpeed = 5;
+        p1stats.p1MovSpeed = 10;
         p1stats.p1JumpHeight = 10f;
+        p1stats.gravity = 20.0f;
+
+        p1stats.p1AirSpeed = 0.5f;
+        p1stats.p1AirFriction = 0.65f;
     }
 
     // Update is called once per frame
@@ -59,6 +67,7 @@ public class P1Mov : MonoBehaviour
             OnDisable();
             SceneManager.LoadScene("SampleScene");
         }
+        flip();
     }
     public void StrightAfterSwing()
     {
@@ -68,9 +77,29 @@ public class P1Mov : MonoBehaviour
     
     void GroundMovement()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveHorizontal * p1stats.p1MovSpeed, rb.velocity.y);
+        GroundCheck();
+        moveHorizontal = Input.GetAxis("Horizontal");
+        movement = moveHorizontal * p1stats.p1MovSpeed;
+        if (isGrounded)
+        {
+            rb.velocity = new Vector2(movement, rb.velocity.y);
 
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rb.AddForce(new Vector2(rb.velocity.x, p1stats.p1JumpHeight));
+                isGrounded = false;
+            }
+        }
+        else
+        {
+            movement = moveHorizontal * p1stats.p1AirSpeed;
+            rb.AddForce(new Vector2(movement, 0));
+        }
+        
+        
+    }
+    void GroundCheck()
+    {
         RaycastHit2D[] hits;
         hits = Physics2D.RaycastAll(transform.position, -transform.up, 0.6f);
 
@@ -86,10 +115,11 @@ public class P1Mov : MonoBehaviour
                 isGrounded = false;
             }
         }
-        if (Input.GetKey(KeyCode.Space) & isGrounded)
-        {
-            rb.AddForce(new Vector2(rb.velocity.x, p1stats.p1JumpHeight));
-            isGrounded = false;
-        }
+    }
+
+    void flip()
+    {
+        if(moveHorizontal < -0.01f) { transform.localScale = new Vector3(-1, 1, 1); }
+        if (moveHorizontal > 0.01f) { transform.localScale = new Vector3(1, 1, 1); }
     }
 }

@@ -13,10 +13,17 @@ public class P2Stats
 
 public class P1Stats : MonoBehaviour
 {
+    public float p1MovSpeed;
+    public float p1AirSpeed;
+    public float p1JumpHeight;
+    public float p1AirFriction;
+
+    public float gravity;
+
     public float p1Stamina;
     public float p1Stability;
-    public float p1MovSpeed;
-    public float p1JumpHeight;
+    
+
     public int p1Lives;
     public int p1NumOfTradEquipment;
     public int p1NumOfChalk;
