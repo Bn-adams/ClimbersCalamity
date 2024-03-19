@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ public class P1Mov : MonoBehaviour
     [SerializeField]
     GameObject WorldStats;
     public RopeScript ropeScript;
+    public RespawnRope respawn;
 
     public P1Stats p1stats;
     public P2Stats p2stats;
@@ -20,11 +22,19 @@ public class P1Mov : MonoBehaviour
     float moveHorizontal;
     private Vector3 jumpVelocity = Vector3.zero;
 
-
+    public Vector2 currentRespawn;
 
     int p1score = 0;
 
-   
+    
+    
+    public enum MovementPhase
+    {
+        Running,
+        Swinging,
+        Climbing,
+        Falling
+    }
 
     private void OnEnable()
     {
@@ -49,11 +59,33 @@ public class P1Mov : MonoBehaviour
         p1stats.p1AirSpeed = 0.5f;
         p1stats.p1AirFriction = 0.65f;
     }
-
+    public void PhaseOfMovement(MovementPhase movementPhase)
+    {
+        switch (movementPhase)
+        {
+            case MovementPhase.Running:
+                GroundMovement();
+                break;
+            case MovementPhase.Swinging:
+                break;
+            case MovementPhase.Climbing:
+                break;
+            case MovementPhase.Falling:
+                break;
+            default:
+                break;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        if (!ropeScript.isSwinging) { GroundMovement(); }
+        
+        
+        // If you're not swinging
+        if (!ropeScript.isSwinging) {
+
+            GroundMovement(); 
+        }
 
         
 
@@ -68,6 +100,7 @@ public class P1Mov : MonoBehaviour
             SceneManager.LoadScene("SampleScene");
         }
         flip();
+        Debug.Log(currentRespawn);
     }
     public void StrightAfterSwing()
     {
@@ -122,4 +155,9 @@ public class P1Mov : MonoBehaviour
         if(moveHorizontal < -0.01f) { transform.localScale = new Vector3(-1, 1, 1); }
         if (moveHorizontal > 0.01f) { transform.localScale = new Vector3(1, 1, 1); }
     }
+    void p1Respawn()
+    {
+
+    }
+    
 }
