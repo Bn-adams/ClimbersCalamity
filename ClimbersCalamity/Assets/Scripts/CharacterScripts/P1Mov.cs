@@ -26,8 +26,9 @@ public class P1Mov : MonoBehaviour
 
     int p1score = 0;
 
-    
-    
+    public PhysicsMaterial2D friction;
+    public PhysicsMaterial2D noFriction;
+
     public enum MovementPhase
     {
         Running,
@@ -58,6 +59,8 @@ public class P1Mov : MonoBehaviour
 
         p1stats.p1AirSpeed = 0.5f;
         p1stats.p1AirFriction = 0.65f;
+
+        //GameObject.Find("GroundTile").GetComponent<BoxCollider2D>().sharedMaterial = noFriction;
     }
     public void PhaseOfMovement(MovementPhase movementPhase)
     {
@@ -100,7 +103,7 @@ public class P1Mov : MonoBehaviour
             SceneManager.LoadScene("SampleScene");
         }
         flip();
-        Debug.Log(currentRespawn);
+        //Debug.Log(currentRespawn);
     }
     public void StrightAfterSwing()
     {
@@ -127,6 +130,7 @@ public class P1Mov : MonoBehaviour
         {
             movement = moveHorizontal * p1stats.p1AirSpeed;
             rb.AddForce(new Vector2(movement, 0));
+            Debug.Log("airmove");
         }
         
         
