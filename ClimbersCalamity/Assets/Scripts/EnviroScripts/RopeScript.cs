@@ -124,7 +124,7 @@ public class RopeScript : MonoBehaviour
             {
 
                 SpringJoint2D newRope = ropeShooter.AddComponent<SpringJoint2D>();
-                newRope.enableCollision = false;
+                newRope.enableCollision = true;
                 newRope.frequency = 0.0f;
                 newRope.connectedAnchor = hit.point;
                 newRope.enabled = true;

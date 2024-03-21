@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,16 +12,30 @@ public class P1Mov : MonoBehaviour
     [SerializeField]
     GameObject WorldStats;
     public RopeScript ropeScript;
+    public RespawnRope respawn;
 
     public P1Stats p1stats;
     public P2Stats p2stats;
     private Rigidbody2D rb;
     private bool isGrounded;
-    
+    private float movement;
+    float moveHorizontal;
+    private Vector3 jumpVelocity = Vector3.zero;
+
+    public Vector2 currentRespawn;
 
     int p1score = 0;
 
-   
+    public PhysicsMaterial2D friction;
+    public PhysicsMaterial2D noFriction;
+
+    public enum MovementPhase
+    {
+        Running,
+        Swinging,
+        Climbing,
+        Falling
+    }
 
     private void OnEnable()
     {
@@ -38,14 +53,42 @@ public class P1Mov : MonoBehaviour
         //p2stats = WorldStats.GetComponent<P2Stats>();
         rb = GetComponent<Rigidbody2D>();
 
-        p1stats.p1MovSpeed = 5;
+        p1stats.p1MovSpeed = 10;
         p1stats.p1JumpHeight = 10f;
-    }
+        p1stats.gravity = 20.0f;
 
+        p1stats.p1AirSpeed = 0.5f;
+        p1stats.p1AirFriction = 0.65f;
+
+        //GameObject.Find("GroundTile").GetComponent<BoxCollider2D>().sharedMaterial = noFriction;
+    }
+    public void PhaseOfMovement(MovementPhase movementPhase)
+    {
+        switch (movementPhase)
+        {
+            case MovementPhase.Running:
+                GroundMovement();
+                break;
+            case MovementPhase.Swinging:
+                break;
+            case MovementPhase.Climbing:
+                break;
+            case MovementPhase.Falling:
+                break;
+            default:
+                break;
+        }
+    }
     // Update is called once per frame
     void Update()
     {
-        if (!ropeScript.isSwinging) { GroundMovement(); }
+        
+        
+        // If you're not swinging
+        if (!ropeScript.isSwinging) {
+
+            GroundMovement(); 
+        }
 
         
 
@@ -59,6 +102,8 @@ public class P1Mov : MonoBehaviour
             OnDisable();
             SceneManager.LoadScene("SampleScene");
         }
+        flip();
+        //Debug.Log(currentRespawn);
     }
     public void StrightAfterSwing()
     {
@@ -68,9 +113,30 @@ public class P1Mov : MonoBehaviour
     
     void GroundMovement()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveHorizontal * p1stats.p1MovSpeed, rb.velocity.y);
+        GroundCheck();
+        moveHorizontal = Input.GetAxis("Horizontal");
+        movement = moveHorizontal * p1stats.p1MovSpeed;
+        if (isGrounded)
+        {
+            rb.velocity = new Vector2(movement, rb.velocity.y);
 
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rb.AddForce(new Vector2(rb.velocity.x, p1stats.p1JumpHeight));
+                isGrounded = false;
+            }
+        }
+        else
+        {
+            movement = moveHorizontal * p1stats.p1AirSpeed;
+            rb.AddForce(new Vector2(movement, 0));
+            Debug.Log("airmove");
+        }
+        
+        
+    }
+    void GroundCheck()
+    {
         RaycastHit2D[] hits;
         hits = Physics2D.RaycastAll(transform.position, -transform.up, 0.6f);
 
@@ -86,10 +152,16 @@ public class P1Mov : MonoBehaviour
                 isGrounded = false;
             }
         }
-        if (Input.GetKey(KeyCode.Space) & isGrounded)
-        {
-            rb.AddForce(new Vector2(rb.velocity.x, p1stats.p1JumpHeight));
-            isGrounded = false;
-        }
     }
+
+    void flip()
+    {
+        if(moveHorizontal < -0.01f) { transform.localScale = new Vector3(-1, 1, 1); }
+        if (moveHorizontal > 0.01f) { transform.localScale = new Vector3(1, 1, 1); }
+    }
+    void p1Respawn()
+    {
+
+    }
+    
 }
