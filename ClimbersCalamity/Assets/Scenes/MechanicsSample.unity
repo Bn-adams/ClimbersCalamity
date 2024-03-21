@@ -229,7 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player1: {fileID: 1737110127}
-  Player2: {fileID: 1122561993}
+  Player2: {fileID: 0}
   distanceBetweenPlayers: 0
   camPos: {x: 0, y: 0, z: 0}
 --- !u!1 &58824260
@@ -1001,7 +1001,7 @@ Transform:
   m_GameObject: {fileID: 1429131331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.060018, y: 13.54, z: 0}
+  m_LocalPosition: {x: 0.24, y: 13.36, z: 0}
   m_LocalScale: {x: 1866.0281, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1467,6 +1467,9 @@ MonoBehaviour:
   p1Mov: {fileID: 0}
   maxRopeFrameCount: 0
   isSwinging: 0
+  p1EnableCollision: 1
+  p1Frequency: 0
+  p1DampingRatio: 0
   lineRenderer: {fileID: 1932900579}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -16,8 +17,12 @@ public class RopeScript : MonoBehaviour
     private float ropedistance;
 
     public bool isSwinging = false;
+    public bool p1EnableCollision = true;
+    public float p1Frequency = 0.0f;
+    public float p1DampingRatio = 0.0f;
 
-   
+
+
 
     public LineRenderer lineRenderer;
 
@@ -125,13 +130,15 @@ public class RopeScript : MonoBehaviour
 
                 SpringJoint2D newRope = ropeShooter.AddComponent<SpringJoint2D>();
                 newRope.enableCollision = true;
-                newRope.frequency = 0.0f;
+                newRope.frequency = p1Frequency;
+                newRope.dampingRatio = p1DampingRatio;
                 newRope.connectedAnchor = hit.point;
                 newRope.enabled = true;
 
+
                 //newRope.distance = 1;
-                
-                DestroyRope();
+
+                ReplaceRope();
                 rope = newRope;
                 isSwinging = true;
                 //ropeFrameCount = 0;
@@ -146,6 +153,16 @@ public class RopeScript : MonoBehaviour
         p1Mov.StrightAfterSwing();
 
         
+        isSwinging = false;
+        GameObject.DestroyImmediate(rope);
+    }
+    void ReplaceRope()
+    {
+        p1Mov = ropeShooter.GetComponent<P1Mov>();
+
+        //p1Mov.StrightAfterSwing();
+
+
         isSwinging = false;
         GameObject.DestroyImmediate(rope);
     }
