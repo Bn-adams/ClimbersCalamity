@@ -29,7 +29,7 @@ public class RopeScript : MonoBehaviour
             Fire();
         }
 
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) & isSwinging)
         {
             DestroyRope();
         }
