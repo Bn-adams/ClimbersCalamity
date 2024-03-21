@@ -23,7 +23,8 @@ public class CameraMov : MonoBehaviour
         if (Player1.transform.position.x > Player2.transform.position.x)
         {
             //distanceBetweenPlayers = Vector2.Distance(Player1, Player2);
-         
-        camPos = Player1.transform.position;
+
+            camPos = Player1.transform.position;
+        }
     }
 }
